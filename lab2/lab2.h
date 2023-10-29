@@ -14,6 +14,8 @@ void iterationPrint();
 
 void forLoopPrint();
 
+void analyseGrades();
+
 void printAvgGrade();
 
 void printMedian();

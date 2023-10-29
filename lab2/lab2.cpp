@@ -1,13 +1,117 @@
-﻿// lab2.cpp : Этот файл содержит функцию "main". Здесь начинается и заканчивается выполнение программы.
-//
-
-#include <iostream>
+﻿#include <iostream>
 #include <vector>
 #include <map>
 #include <algorithm>
 #include <tuple>
 #include <unordered_map>
+#include <random>
+#include <ctime>
+#include <Windows.h>
 #include "lab2.h"
+
+// ООО "Костыль-Электроникс"
+const std::string NAMES_LIST[] = {
+	"Платон",
+	"Андрей",
+	"Ксения",
+	"Диана",
+	"Алиса",
+	"Виктория",
+	"Василиса",
+	"Илья",
+	"Степан",
+	"Евгений",
+	"Кирилл",
+	"Максим",
+	"Вероника",
+	"Артемий",
+	"София",
+	"Тимур",
+	"Полина",
+	"Максим",
+	"Кирилл",
+	"Даниил",
+	"Илья",
+	"Алина",
+	"Евгения",
+	"Лидия",
+	"Артём",
+	"Даниил",
+	"Артём",
+	"Захар",
+	"Арина",
+	"Семён",
+	"Алиса",
+	"Даниил",
+	"Алиса",
+	"Анастасия",
+	"Екатерина",
+	"Герман",
+	"Елизавета",
+	"Вероника",
+	"Дмитрий",
+	"София",
+	"Платон",
+	"Никита",
+	"Елизавета",
+	"София",
+	"Василиса",
+	"Мария",
+	"Георгий",
+	"Александр",
+	"Фёдор",
+	"Василиса",
+	"Николай",
+	"Алиса",
+	"Михаил",
+	"Анна",
+	"Маргарита",
+	"Захар",
+	"София",
+	"Мирон",
+	"Алина",
+	"Виктория",
+	"Артём",
+	"Василиса",
+	"Полина",
+	"Анастасия",
+	"Максим",
+	"Тимофей",
+	"Екатерина",
+	"Кирилл",
+	"Арсений",
+	"Ксения",
+	"Богдан",
+	"Милана",
+	"Алиса",
+	"Мария",
+	"Ксения",
+	"Василиса",
+	"Милана",
+	"Владислава",
+	"Александр",
+	"Валерия",
+	"Роман",
+	"Максим",
+	"Тимофей",
+	"Владислав",
+	"Матвей",
+	"Дарья",
+	"Даниил",
+	"Ксения",
+	"Алёна",
+	"Алиса",
+	"Сергей",
+	"Алиса",
+	"Иван",
+	"Владимир",
+	"Тимофей",
+	"Михаил",
+	"Диана",
+	"Александр",
+	"Арсений",
+	"София"
+};
 
 std::vector<std::string> names = {};
 std::vector<int> grades = {}; //оценки 0-100
@@ -15,6 +119,9 @@ std::vector<int> grades = {}; //оценки 0-100
 int main()
 {
 	setlocale(LC_ALL, "rus");
+	srand(time(NULL));
+	SetConsoleOutputCP(1251);
+	SetConsoleCP(1251);
 	char* input = new char;
 	//цикл ввода
 	while (true) {
@@ -41,6 +148,7 @@ int main()
 		inputAnalysis();
 		break;
 	}
+	system("pause");
 }
 
 void demoAnalysis() {
@@ -48,11 +156,10 @@ void demoAnalysis() {
 	names = { "Владислав", "Андрей", "Георгий", "София", "Александр", "Дмитрий", "Светлана", "Николай", "Мохаммед", "Алоис"};
 	grades = { 38,83,41,48,32,50,26,52,50,65 };
 	//вывести вектора
+	system("cls");
 	rangePrint();
 	//сделать и вывести анализ
-	printAvgGrade();
-	printMedian();
-	printMode();
+	analyseGrades();
 }
 void randomAnalysis() {
 	//принять размер выборки
@@ -60,23 +167,44 @@ void randomAnalysis() {
 	int setSize = 1;
 	std::cin >> setSize;
 	//сгенерировать 
+	for (int i = 0; i < setSize; i++) {
+		names.push_back(NAMES_LIST[rand() % 100]);
+		grades.push_back(rand() % 101);
+	}
 	//и вывести вектора
-	forLoopPrint();
+	system("cls");
+	rangePrint();
 	//сделать и вывести анализ
+	analyseGrades();
 }
 void inputAnalysis() {
 	//принимать значения от пользователя до пустой строчки
+	printf("Введите значения в консоль.\n");
+	printf("Вводить в формате [имя оценка], без квадратных скобок. Введите [0 0] без скобок для начала анализа.\n");
+	std::string name;
+	int grade;
+	while (true) {
+		std::cin >> name >> grade;
+		if (name == "0" && grade == 0) break;
+		names.push_back(name);
+		grades.push_back(grade);
+	}
+	if (names.size() == 0 || grades.size() == 0) {
+		printf("Не было введено значений, программа завершает работу...");
+		return;
+	}
 	//вывести вектора
-	iterationPrint();
+	system("cls");
+	rangePrint();
 	//сделать и вывести анализ
-	//войти в цикл приема/удаления
+	analyseGrades();
 }
 
 void rangePrint() {
 	//у нас нет какого-то красивого пути итерировать таким способом по двум векторам одновременно,
 	//поэтому придется соединить их в таблицу-буфер
 	std::map<std::string, int> buffer;
-	// create buffer map
+	//заполнение таблицы-буфера
 	std::transform(names.begin(), names.end(), grades.begin(), std::inserter(buffer, buffer.end()), [](std::string a, int b)
 		{
 			return std::make_pair(a, b);
@@ -92,9 +220,15 @@ void iterationPrint() {
 }
 
 void forLoopPrint() {
-	for(int i = 0; i < std::min(names.size(), grades.size()); i++) 
+	for (int i = 0; i < (((names.size()) < (grades.size())) ? (names.size()) : (grades.size())); i++)
 		std::cout << names[i] << ' ' << grades[i] << '\n';
 	std::cout << '\n';
+}
+
+void analyseGrades() {
+	printAvgGrade();
+	printMedian();
+	printMode();
 }
 
 void printAvgGrade() {
@@ -112,7 +246,7 @@ void printMedian() {
 }
 
 double getMedianFromEvenVector(std::vector<int> input) {
-	return (input.at(input.size() / 2) + input.at(input.size() / 2 - 1)) / 2;
+	return ((double)input.at(input.size() / 2) + (double)input.at(input.size() / 2 - 1)) / 2;
 }
 
 void printMode() {
