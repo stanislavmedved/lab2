@@ -7,9 +7,7 @@
 #include <random>
 #include <ctime>
 #include <Windows.h>
-#include "lab2.h"
 
-// ООО "Костыль-Электроникс"
 const std::string NAMES_LIST[] = {
 	"Платон",
 	"Андрей",
@@ -111,165 +109,179 @@ const std::string NAMES_LIST[] = {
 	"Александр",
 	"Арсений",
 	"София"
-};
+}; // Словарь случайных имен 
 
-std::vector<std::string> names = {};
-std::vector<int> grades = {}; //оценки 0-100
+// Объявление всех оценок (можно убрать в файл заголовка)
+void demoAnalysis();
+void randomAnalysis();
+void inputAnalysis();
+void rangePrint();
+void iterationPrint();
+void forLoopPrint();
+void analyseGrades();
+void printAvgGrade();
+void printMedian();
+double getMedianFromEvenVector(std::vector<int> input);
+void printMode();
+void cocktailSort(std::vector<int>& input);
+
+
+std::vector<std::string> names = {}; // Вектор с именами
+std::vector<int> grades = {};		 // Вектор с оценками
 
 int main()
 {
-	setlocale(LC_ALL, "rus");
-	srand(time(NULL));
-	SetConsoleOutputCP(1251);
-	SetConsoleCP(1251);
-	char* input = new char;
-	//цикл ввода
-	while (true) {
-		system("cls");
-		printf("Выберите способ инициализации вектора:\n\n"
+	srand(time(NULL));				 // Задаём зерно генератора случайных чисел
+	setlocale(LC_ALL, "rus");		 // Изменение кодировки программы
+	SetConsoleOutputCP(1251);		 // Изменение кодировки консоли
+	SetConsoleCP(1251);				 // Изменение кодировки входных данных в консоли
+	char* input = new char;			 // Переменная для хранения выбора пункта меню
+	
+	while (true) {															//цикл ввода
+		system("cls");														// Очищаем консоль
+		printf("Выберите способ инициализации вектора:\n\n"					// Выводим текст меню с пунктами выбора
 			"1. Демонстрационный анализ на предустановленных значениях.\n"
 			"2. Анализ на случайных значениях\n"
 			"3. Ввод и анализ значений\n\n"
 			"Введите выбор и нажмите Enter: ");
-		std::cin >> *input;
+		std::cin >> *input;						// Принимаем выбор пользователя и записываем в переменную input
 
-		if (!isdigit(*input)) continue;
-		if (0 < (int)*input < 4) break;
+		if (!isdigit(*input)) continue;			// Если пользователь ввел что-то не то - запрашиваем повторно
+		if (0 < ((int)*input - 48) < 4) break;	// Иначе - выходим из цикла ввода
 	}
-	int choice = (int)*input - 48;
-	switch (choice) {
+
+	int choice = (int)*input - 48;	// Преобразуем введённый символ в число
+
+	switch (choice) {		// Выбираем нужный путь программы в зависимости от решения пользователя
 	case 1:
-		demoAnalysis();
+		demoAnalysis();		// Демонстрационный анализ с предустановленными значениями
 		break;
 	case 2:
-		randomAnalysis();
+		randomAnalysis();	// Анализ на случайных значениях
 		break;
 	case 3:
-		inputAnalysis();
+		inputAnalysis();	// Анализ на основе данных пользователя
 		break;
 	}
-	system("pause");
+	system("pause");		// После выполнения анализа ждём нажатия клавиши для завершения программы
 }
 
-void demoAnalysis() {
-	//прописать 10 значений
-	names = { "Владислав", "Андрей", "Георгий", "София", "Александр", "Дмитрий", "Светлана", "Николай", "Мохаммед", "Алоис"};
-	grades = { 38,83,41,48,32,50,26,52,50,65 };
-	//вывести вектора
-	system("cls");
-	rangePrint();
-	//сделать и вывести анализ
-	analyseGrades();
+void demoAnalysis() { // Функция демонстрационного анализа
+	names = { "Владислав", "Андрей", "Георгий", "София", "Александр", "Дмитрий", "Светлана", "Николай", "Мохаммед", "Алоис"}; // Предустановленные имена
+	grades = { 38,83,41,48,32,50,26,52,50,65 }; // Предустановленные оценки
+	
+	system("cls");	  // Очищаем консоль
+	rangePrint();	  // Выводим вектора имён и оценок в консоль с помощью range-based for-loop
+	analyseGrades();  // Проводим анализ оценок и выводим результаты в консоль
 }
-void randomAnalysis() {
-	//принять размер выборки
-	std::cout << "Введите размер выборки: ";
-	int setSize = 1;
-	std::cin >> setSize;
-	//сгенерировать 
-	for (int i = 0; i < setSize; i++) {
-		names.push_back(NAMES_LIST[rand() % 100]);
-		grades.push_back(rand() % 101);
+
+void randomAnalysis() { // Функция анализа на случайных числах
+	std::cout << "Введите размер выборки: "; // Запрашиваем у пользователя размер выборки
+	int setSize = 1;						 // Переменная для размера выборки, по умолчанию - 1
+	std::cin >> setSize;					 // Сохраняем введённый размер выборки в переменную
+
+	for (int i = 0; i < setSize; i++) {			    // Цикл генерации случайных имён и оценок
+		names.push_back(NAMES_LIST[rand() % 100]);  // Выбираем случайное имя из словаря
+		grades.push_back(rand() % 101);				// Генерируем случайную оценку от 0 до 100
 	}
-	//и вывести вектора
-	system("cls");
-	rangePrint();
-	//сделать и вывести анализ
-	analyseGrades();
+
+	system("cls");	  // Очищаем консоль
+	rangePrint();	  // Выводим вектора имён и оценок в консоль с помощью range-based for-loop
+	analyseGrades();  // Проводим анализ оценок и выводим результаты в консоль
 }
-void inputAnalysis() {
-	//принимать значения от пользователя до пустой строчки
-	printf("Введите значения в консоль.\n");
+
+void inputAnalysis() { // Функция анализа на пользовательских данных
+
+	printf("Введите значения в консоль.\n"); // Объясняем правила ввода данных
 	printf("Вводить в формате [имя оценка], без квадратных скобок. Введите [0 0] без скобок для начала анализа.\n");
-	std::string name;
-	int grade;
-	while (true) {
-		std::cin >> name >> grade;
-		if (name == "0" && grade == 0) break;
-		names.push_back(name);
-		grades.push_back(grade);
+
+	std::string name; // Буфер для имени
+	int grade;		  // Буфер для оценки
+
+	while (true) {	  // Цикл ввода данных
+		std::cin >> name >> grade;				// Сохраняем введённые данные в буфера
+		if (name == "0" && grade == 0) break;	// Если пользователь ввёл [0 0] - выходим из цикла ввода
+		names.push_back(name);					// Сохраняем имя из буфера в вектор
+		grades.push_back(grade);				// Сохраняем оценку из буфера в вектор
 	}
-	if (names.size() == 0 || grades.size() == 0) {
-		printf("Не было введено значений, программа завершает работу...");
-		return;
+
+	if (names.size() == 0 || grades.size() == 0) {							// Обработчик на случай, если пользователь ничего не ввёл
+		printf("Не было введено значений, программа завершает работу...");  // Говорим пользователю, что произошло
+		return;																// Завершаем работу программы
 	}
-	//вывести вектора
-	system("cls");
-	rangePrint();
-	//сделать и вывести анализ
-	analyseGrades();
+
+	system("cls");	  // Очищаем консоль
+	rangePrint();	  // Выводим вектора имён и оценок в консоль с помощью range-based for-loop
+	analyseGrades();  // Проводим анализ оценок и выводим результаты в консоль
 }
 
-void rangePrint() {
-	//у нас нет какого-то красивого пути итерировать таким способом по двум векторам одновременно,
-	//поэтому придется соединить их в таблицу-буфер
-	std::map<std::string, int> buffer;
-	//заполнение таблицы-буфера
-	std::transform(names.begin(), names.end(), grades.begin(), std::inserter(buffer, buffer.end()), [](std::string a, int b)
-		{
-			return std::make_pair(a, b);
-		});
-	for (auto& [a, b] : buffer) std::cout << a << ' ' << b << '\n';
-	std::cout << '\n';
+void rangePrint() { // Функция вывода данных через range-based for-loop
+
+	std::map<std::string, int> buffer;	//у нас нет какого-то красивого пути итерировать таким способом по двум векторам одновременно,
+										//поэтому придется соединить их в таблицу-буфер
+
+	std::transform(names.begin(), names.end(), grades.begin(), std::inserter(buffer, buffer.end()), [](std::string a, int b) {
+		return std::make_pair(a, b); // Заполняем таблицу парами имя-оценка, где имя - это ключ
+	});
+
+	for (auto& [a, b] : buffer) std::cout << a << ' ' << b << '\n'; // Через цикл выводим данные в формате [имя оценка]
+	std::cout << '\n';												// Перенос на новую строку
 }
 
-void iterationPrint() {
-	for (auto [n, g] = std::tuple{names.begin(), grades.begin()}; n != names.end() && g != grades.end(); n++, g++) 
-		std::cout << *n << ' ' << *g << '\n';
-	std::cout << '\n';
+void iterationPrint() { // Функция вывода через итератор
+	for (auto [n, g] = std::tuple{names.begin(), grades.begin()}; n != names.end() && g != grades.end(); n++, g++) // Создаём пару итераторов и идём по ним в цикле 
+		std::cout << *n << ' ' << *g << '\n'; // Через цикл выводим данные в формате [имя оценка]
+	std::cout << '\n';						  // Перенос на новую строку
 }
 
-void forLoopPrint() {
-	for (int i = 0; i < (((names.size()) < (grades.size())) ? (names.size()) : (grades.size())); i++)
-		std::cout << names[i] << ' ' << grades[i] << '\n';
-	std::cout << '\n';
+void forLoopPrint() { // Функция вывода через индексы
+	for (int i = 0; i < (((names.size()) < (grades.size())) ? (names.size()) : (grades.size())); i++) // Находим наименьший вектор и идём по каждому индексу в нём
+		std::cout << names[i] << ' ' << grades[i] << '\n'; // Через цикл выводим данные в формате [имя оценка]
+	std::cout << '\n'; // Перенос на новую строку
 }
 
-void analyseGrades() {
-	printAvgGrade();
-	printMedian();
-	printMode();
+void analyseGrades() { // Функция анализа и вывода результатов (по факту сокращение для читаемости кода)
+	printAvgGrade();   // Нахождение среднего
+	printMedian();	   // Нахождение медианы
+	printMode();       // Нахождение моды
 }
 
-void printAvgGrade() {
-	double avg = 0.0;
-	for (auto i : grades) avg += (double)i;
-	avg /= grades.size();
-	std::cout << "Среднее значение оценок: " << avg << '\n';
+void printAvgGrade() { // Функция для нахождения среднего
+	double avg = 0.0;  // Переменная с результатом поиска
+	for (auto i : grades) avg += (double)i; // Складываем все оценки
+	avg /= grades.size();					// и делим их на количество
+	std::cout << "Среднее значение оценок: " << avg << '\n'; // Выводим результат в консоль
 }
 
-void printMedian() {
-	std::vector<int> sortedGrades = grades;
-	cocktailSort(sortedGrades);
-	double median = (sortedGrades.size() % 2 == 0) ? getMedianFromEvenVector(sortedGrades) : sortedGrades.at(std::floor(sortedGrades.size() / 2));
-	std::cout << "Медиана: " << median << '\n';
+void printMedian() { // Функция нахождения медианы
+	std::vector<int> sortedGrades = grades; // Вектор для сортировки оценок
+	cocktailSort(sortedGrades);				// Сортируем оценки
+
+	double median = (sortedGrades.size() % 2 == 0) ?																	 // Выбираем медиану
+		((double)sortedGrades.at(sortedGrades.size() / 2) + (double)sortedGrades.at(sortedGrades.size() / 2 - 1)) / 2 :  // Если количество элементов четное - находим среднее между двумя центральными элементами
+		sortedGrades.at(std::floor(sortedGrades.size() / 2));															 // Иначе - берём центральный элемент
+	std::cout << "Медиана: " << median << '\n'; // Выводим результат в консоль
 }
 
-double getMedianFromEvenVector(std::vector<int> input) {
-	return ((double)input.at(input.size() / 2) + (double)input.at(input.size() / 2 - 1)) / 2;
-}
+void printMode() { // Функция нахождения моды
+	std::unordered_map<int, int> gradesHashmap;  // Таблица частот оценок
+	for (auto i : grades) gradesHashmap[i] += 1; // Заполняем таблицу частотами оценок
 
-void printMode() {
-	//заполняем таблицу частот оценок
-	std::unordered_map<int, int> gradesHashmap;
-	for (auto i : grades) {
-		gradesHashmap[i] += 1;
-	}
-	//находим максимальную частоту
-	int maxFreq = 0;
-	for (auto& [a, b] : gradesHashmap) {
-		if (b > maxFreq) maxFreq = b;
-	}
-	//находим все оценки с максимальной частотой
-	std::vector<int> freqGrades;
-	for (auto& [a, b] : gradesHashmap) {
-		if (b == maxFreq) freqGrades.push_back(a);
-	}
-	//выводим
+	int maxFreq = 0;							 // Максимальная частота оценки
+	for (auto& [a, b] : gradesHashmap)			 // Через цикл находим максимальную частоту оценки
+		if (b > maxFreq)
+			maxFreq = b;
+	
+	std::vector<int> freqGrades;				 // Вектор мод (самых частых оценок)
+	for (auto& [a, b] : gradesHashmap)			 // Находим моды и добавляем их в вектор
+		if (b == maxFreq) 
+			freqGrades.push_back(a);
+
 	std::cout << "Моды: ";
-	for (auto i : freqGrades) std::cout << i << ' ';
-	std::cout << '\n';
-	//выводим всех студентов с оценками максимальной частоты
+	for (auto i : freqGrades)
+		std::cout << i << ' ';
+	std::cout << '\n';        // Выводим результаты
+	// Находим студентов с модами-оценками и выводим их
 	std::cout << "Ученики, оценка которых соответствует моде (модам):\n";
 	for (int i = 0; i < names.size(); i++) {
 		if (std::find(freqGrades.begin(), freqGrades.end(), grades.at(i)) != freqGrades.end()) {
