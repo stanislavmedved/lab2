@@ -7,6 +7,7 @@
 #include <random>
 #include <ctime>
 #include <Windows.h>
+#include "lab2.h"
 
 const std::string NAMES_LIST[] = {
 	"Платон",
@@ -111,21 +112,6 @@ const std::string NAMES_LIST[] = {
 	"София"
 }; // Словарь случайных имен 
 
-// Объявление всех оценок (можно убрать в файл заголовка)
-void demoAnalysis();
-void randomAnalysis();
-void inputAnalysis();
-void rangePrint();
-void iterationPrint();
-void forLoopPrint();
-void analyseGrades();
-void printAvgGrade();
-void printMedian();
-double getMedianFromEvenVector(std::vector<int> input);
-void printMode();
-void cocktailSort(std::vector<int>& input);
-
-
 std::vector<std::string> names = {}; // Вектор с именами
 std::vector<int> grades = {};		 // Вектор с оценками
 
@@ -137,6 +123,8 @@ int main()
 	SetConsoleCP(1251);				 // Изменение кодировки входных данных в консоли
 	char* input = new char;			 // Переменная для хранения выбора пункта меню
 	
+	//// ПУНКТ 1
+
 	while (true) {															//цикл ввода
 		system("cls");														// Очищаем консоль
 		printf("Выберите способ инициализации вектора:\n\n"					// Выводим текст меню с пунктами выбора
